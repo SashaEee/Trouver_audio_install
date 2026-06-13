@@ -2,6 +2,7 @@
 import os
 import re
 import json
+import shutil
 import secrets
 import tempfile
 
@@ -142,6 +143,10 @@ def logout():
     if sid and sid in STORE:
         for eid in STORE[sid].get("edits", {}):
             builder.remove(eid)
+        try:
+            shutil.rmtree(_clips_dir(sid), ignore_errors=True)
+        except Exception:
+            pass
         STORE.pop(sid, None)
     session.clear()
     return jsonify({"ok": True})
@@ -333,23 +338,17 @@ def remove_edit():
     return jsonify({"ok": True})
 
 
-@app.post("/api/build_install")
-def build_install():
-    c = _cloud()
-    if not c:
-        return need_auth()
-    d = request.get_json(force=True, silent=True) or {}
-    did = d.get("did")
+def _do_build_install(c, did):
+    """Build the session's edits into a pack, host it, install on the robot."""
     edits = _edits()
     if not edits:
-        return jsonify({"error": "нет своих фраз — сначала запишите хотя бы одну"}), 400
+        return jsonify({"error": "нет своих фраз — сначала добавьте хотя бы одну"}), 400
     try:
         raw, md5, size = builder.build_pack(edits.keys())
         url = builder.host_pack(raw, md5)
     except builder.BuildError as e:
         return jsonify({"error": str(e)}), 502
-    STORE[_sid()]["custom"] = {"url": url, "md5": md5, "size": size,
-                               "coverage": len(edits)}
+    STORE[_sid()]["custom"] = {"url": url, "md5": md5, "size": size, "coverage": len(edits)}
     try:
         res = c.install(did, MY_ID, url, md5, size)
         _save(c)
@@ -357,6 +356,109 @@ def build_install():
                         "size": size, "result": res})
     except CloudError as e:
         return jsonify({"error": str(e)}), 502
+
+
+@app.post("/api/build_install")
+def build_install():
+    c = _cloud()
+    if not c:
+        return need_auth()
+    d = request.get_json(force=True, silent=True) or {}
+    return _do_build_install(c, d.get("did"))
+
+
+# ---- bulk pack builder: upload a tray of clips, arrange onto event slots ----
+def _clips(sid):
+    return STORE[sid].setdefault("clips", {})  # cid -> {name, path, dur}
+
+
+def _clips_dir(sid):
+    d = os.path.join(HERE, "data", "clips", re.sub(r"[^0-9a-f]", "", sid or "")[:32])
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
+@app.post("/api/clips/upload")
+def clips_upload():
+    c = _cloud()
+    if not c:
+        return need_auth()
+    sid = _sid()
+    files = request.files.getlist("files") or ([request.files["audio"]] if "audio" in request.files else [])
+    if not files:
+        return jsonify({"error": "нет файлов"}), 400
+    out, reg, cdir = [], _clips(sid), _clips_dir(sid)
+    for f in files:
+        cid = secrets.token_hex(6)
+        ext = (os.path.splitext(f.filename or "")[1] or ".bin")[:8]
+        path = os.path.join(cdir, cid + ext)
+        f.save(path)
+        dur = builder._probe(path).get("duration") if hasattr(builder, "_probe") else None
+        name = os.path.splitext(os.path.basename(f.filename or "клип"))[0][:48]
+        reg[cid] = {"name": name, "path": path, "ext": ext, "dur": dur}
+        out.append({"id": cid, "name": name, "dur": dur})
+    return jsonify({"ok": True, "clips": out})
+
+
+@app.get("/api/clips")
+def clips_list():
+    c = _cloud()
+    if not c:
+        return need_auth()
+    reg = _clips(_sid())
+    clips = [{"id": k, "name": v["name"], "dur": v.get("dur")} for k, v in reg.items()]
+    return jsonify({"clips": clips})
+
+
+@app.get("/api/clips/audio/<cid>")
+def clips_audio(cid):
+    sid = _sid()
+    if not sid or sid not in STORE:
+        abort(404)
+    v = _clips(sid).get(re.sub(r"[^0-9a-f]", "", cid))
+    if not v or not os.path.isfile(v["path"]):
+        abort(404)
+    return send_file(v["path"])
+
+
+@app.post("/api/clips/clear")
+def clips_clear():
+    c = _cloud()
+    if not c:
+        return need_auth()
+    sid = _sid()
+    shutil.rmtree(_clips_dir(sid), ignore_errors=True)
+    STORE[sid]["clips"] = {}
+    return jsonify({"ok": True})
+
+
+@app.post("/api/clips/build")
+def clips_build():
+    """Apply {eid: cid} assignments → encode each clip onto its slot → build+install."""
+    c = _cloud()
+    if not c:
+        return need_auth()
+    d = request.get_json(force=True, silent=True) or {}
+    did = d.get("did")
+    assign = d.get("assign") or {}
+    _model, ids = _known_event_ids(c, did)
+    reg = _clips(_sid())
+    applied = 0
+    for eid, cid in assign.items():
+        eid = re.sub(r"[^0-9A-Za-z]", "", eid or "")
+        v = reg.get(cid)
+        if eid not in ids or not v or not os.path.isfile(v["path"]):
+            continue
+        try:
+            info = builder.make_from_file(eid, v["path"])
+        except builder.BuildError:
+            continue
+        _edits()[eid] = {"kind": "clip", "label": v["name"], "size": info["size"],
+                         "duration": info.get("duration")}
+        applied += 1
+    if not applied:
+        return jsonify({"error": "ни один клип не разложен по слотам"}), 400
+    return _do_build_install(c, did)
 
 
 _WORK = os.path.join(HERE, "..", "media")

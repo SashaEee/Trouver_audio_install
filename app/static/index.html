@@ -60,6 +60,12 @@
   </div>
 
   <div class="wrap">
+    <button class="make-cta" id="open-builder" type="button">
+      <span class="make-ic"><i class="ti ti-layout-board-split" aria-hidden="true"></i></span>
+      <span class="make-tx"><b>Собрать свою озвучку</b><span>Загрузите свои клипы и разложите их по фразам робота — перетаскиванием</span></span>
+      <span class="make-go"><i class="ti ti-arrow-right" aria-hidden="true"></i></span>
+    </button>
+
     <div class="section-h">Готовые пакеты</div>
     <p class="lib-note">Штатные RU/EN включаются мгновенно. В роботе одна «своя» ячейка — установка нового пакета или вашей озвучки заменяет предыдущий.</p>
     <div class="lib" id="lib"></div>
@@ -82,6 +88,42 @@
     </div>
     <button class="replace" id="pl-replace"><i class="ti ti-microphone" aria-hidden="true"></i>Заменить</button>
   </div>
+</section>
+
+<section id="builder" class="view hidden">
+  <div class="topbar">
+    <div class="left">
+      <button class="iconbtn" id="b-back" aria-label="Назад"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+      <span class="wordmark" style="font-size:17px">Своя озвучка</span>
+      <span class="b-cov" id="b-cov">0 из 0 фраз</span>
+    </div>
+    <div class="left">
+      <button class="btn sm" id="b-build" type="button" disabled><i class="ti ti-packages" aria-hidden="true"></i><span id="b-build-lbl">Собрать и установить</span></button>
+    </div>
+  </div>
+
+  <div class="b-tools">
+    <button class="btn-ghost b-tool" id="b-upload" type="button"><i class="ti ti-upload" aria-hidden="true"></i> Загрузить клипы</button>
+    <button class="btn-ghost b-tool" id="b-order" type="button"><i class="ti ti-arrows-sort" aria-hidden="true"></i> Разложить по порядку</button>
+    <div class="seg b-filter" id="b-filter">
+      <button type="button" data-f="all" class="on">Все</button>
+      <button type="button" data-f="empty">Пустые</button>
+      <button type="button" data-f="filled">С озвучкой</button>
+    </div>
+    <button class="iconbtn danger" id="b-clear" type="button" aria-label="Очистить клипы"><i class="ti ti-trash" aria-hidden="true"></i></button>
+  </div>
+
+  <div class="b-cols">
+    <aside class="b-clips">
+      <div class="b-col-h">Ваши клипы <span class="b-count" id="b-clips-n">0</span></div>
+      <div class="b-tray" id="b-tray"></div>
+    </aside>
+    <section class="b-slots">
+      <div class="b-col-h">Что говорит робот</div>
+      <div id="b-slot-list"></div>
+    </section>
+  </div>
+  <div class="b-hint" id="b-hint">Выберите клип слева, затем нажмите на фразу — или перетащите.</div>
 </section>
 
 <div class="sheet-bg" id="sheet-bg"></div>
@@ -131,6 +173,7 @@
 <audio id="au" preload="none"></audio>
 <audio id="pv" preload="none"></audio>
 <input type="file" id="file" accept="audio/*,video/*" class="hidden">
+<input type="file" id="b-files" accept="audio/*,video/*" multiple class="hidden">
 <script src="app.js"></script>
 </body>
 </html>

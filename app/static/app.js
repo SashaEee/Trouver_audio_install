@@ -446,3 +446,181 @@ pv.addEventListener("ended", () => { $("#prev-pp").innerHTML = '<i class="ti ti-
   try { const s = await api("/api/session"); enter(s.devices); } catch (e) {}
 })();
 window.addEventListener("resize", () => { $$(".wf").forEach(el => wave(el, el.dataset.seed, el.dataset.id === NOW ? (au.duration ? au.currentTime / au.duration : 0) : 0)); });
+
+/* ====================== pack builder (bulk arrange) ====================== */
+let CLIPS = [], ASSIGN = {}, SEL = null, BFILTER = "all", DRAG_CID = null;
+const bpv = $("#pv");  // reuse the sheet preview element; builder is its own screen
+
+$("#open-builder").addEventListener("click", openBuilder);
+$("#b-back").addEventListener("click", closeBuilder);
+
+async function openBuilder() {
+  if (!EVENTS.length) await loadEvents();
+  $("#editor").classList.add("hidden"); $("#builder").classList.remove("hidden");
+  // seed assignments from existing custom edits so the screen reflects reality
+  ASSIGN = {}; SEL = null;
+  try { const d = await api("/api/clips"); CLIPS = d.clips || []; } catch (e) { CLIPS = []; }
+  renderTray(); renderSlots(); updateBcov();
+  window.scrollTo(0, 0);
+}
+function closeBuilder() {
+  try { bpv.pause(); } catch (e) {}
+  $("#builder").classList.add("hidden"); $("#editor").classList.remove("hidden");
+  loadState(); loadLibrary(); loadEvents();
+}
+
+/* ---- upload clips ---- */
+$("#b-upload").addEventListener("click", () => $("#b-files").click());
+$("#b-files").addEventListener("change", async e => {
+  const files = [...e.target.files]; e.target.value = "";
+  if (!files.length) return;
+  const fd = new FormData(); files.forEach(f => fd.append("files", f, f.name));
+  $("#b-upload").disabled = true;
+  try {
+    const r = await fetch("/api/clips/upload", { method: "POST", credentials: "same-origin", body: fd });
+    const b = await r.json(); if (!r.ok) throw new Error(b.error || "ошибка загрузки");
+    CLIPS = CLIPS.concat(b.clips); renderTray();
+    toast(`Загружено клипов: ${b.clips.length}`);
+  } catch (ex) { toast(ex.message); }
+  finally { $("#b-upload").disabled = false; }
+});
+
+$("#b-clear").addEventListener("click", async () => {
+  if (!CLIPS.length) return;
+  try { await api("/api/clips/clear", { method: "POST" }); } catch (e) {}
+  CLIPS = []; ASSIGN = {}; SEL = null; renderTray(); renderSlots(); updateBcov();
+});
+
+/* ---- tray ---- */
+function usedCount(cid) { return Object.values(ASSIGN).filter(x => x === cid).length; }
+function renderTray() {
+  const t = $("#b-tray"); $("#b-clips-n").textContent = CLIPS.length;
+  if (!CLIPS.length) { t.innerHTML = `<div class="b-tray-empty">Пока пусто.<br>Нажмите «Загрузить клипы» — можно выбрать сразу много файлов.</div>`; return; }
+  t.innerHTML = CLIPS.map(c => {
+    const u = usedCount(c.id);
+    return `<div class="clip ${SEL === c.id ? "sel" : ""}" draggable="true" data-cid="${c.id}">
+      <button class="cpp" data-act="cplay" aria-label="Прослушать"><i class="ti ti-player-play" aria-hidden="true"></i></button>
+      <div style="min-width:0"><div class="cn">${esc(c.name)}</div><div class="cmeta">${c.dur ? fmt(c.dur) : "клип"}</div></div>
+      ${u ? `<span class="used">${u} ${u === 1 ? "слот" : "слота"}</span>` : `<i class="ti ti-grip-vertical" style="color:var(--faint)" aria-hidden="true"></i>`}
+    </div>`;
+  }).join("");
+}
+function clipName(cid) { const c = CLIPS.find(x => x.id === cid); return c ? c.name : "клип"; }
+
+/* ---- slots ---- */
+function renderSlots() {
+  const list = $("#b-slot-list"), groups = {};
+  EVENTS.forEach(e => (groups[e.category] = groups[e.category] || []).push(e));
+  let html = "";
+  for (const cat of Object.keys(CATS)) {
+    const items = (groups[cat] || []).filter(e => {
+      if (BFILTER === "empty") return !ASSIGN[e.id];
+      if (BFILTER === "filled") return !!ASSIGN[e.id];
+      return true;
+    });
+    if (!items.length) continue;
+    html += `<div class="group-h">${CATS[cat]}</div>`;
+    for (const e of items) {
+      const cid = ASSIGN[e.id];
+      const target = cid
+        ? `<div class="s-chip"><button class="cpp act" data-act="splay" aria-label="Прослушать"><i class="ti ti-player-play" aria-hidden="true"></i></button><span class="cn">${esc(clipName(cid))}</span><button class="x" data-act="unassign" aria-label="Убрать">×</button></div>`
+        : `<div class="s-empty"><i class="ti ti-plus" aria-hidden="true"></i> ${SEL ? "поставить сюда" : "перетащите клип"}</div>`;
+      html += `<div class="slot ${SEL ? "armed" : ""}" data-eid="${e.id}">
+        <div class="s-mean"><div class="s-ttl">${e.title}</div><div class="s-phr">${esc(e.phrase)}</div></div>
+        <div class="s-target" data-cid="${cid || ""}">${target}</div>
+      </div>`;
+    }
+  }
+  list.innerHTML = html || `<p style="color:var(--muted);padding:18px 4px">Здесь пусто.</p>`;
+}
+
+/* ---- filters ---- */
+$("#b-filter").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  BFILTER = b.dataset.f; $$("#b-filter button").forEach(x => x.classList.toggle("on", x === b));
+  renderSlots();
+});
+
+/* ---- assignment ---- */
+function assign(eid, cid) { if (!cid) return; ASSIGN[eid] = cid; renderTray(); renderSlots(); updateBcov(); }
+function unassign(eid) { delete ASSIGN[eid]; renderTray(); renderSlots(); updateBcov(); }
+function selectClip(cid) { SEL = (SEL === cid) ? null : cid; renderTray(); renderSlots(); }
+function updateBcov() {
+  const n = Object.keys(ASSIGN).length, total = EVENTS.length;
+  $("#b-cov").textContent = `${n} из ${total} фраз`;
+  const btn = $("#b-build"); btn.disabled = n === 0;
+  $("#b-build-lbl").textContent = n ? `Собрать и установить · ${n}` : "Собрать и установить";
+  $("#b-hint").style.display = SEL ? "block" : (n ? "none" : "block");
+  $("#b-hint").textContent = SEL ? "Теперь нажмите на фразу справа — клип встанет в неё." : "Выберите клип слева, затем нажмите на фразу — или перетащите.";
+}
+
+/* tray clicks: play or select */
+$("#b-tray").addEventListener("click", e => {
+  const card = e.target.closest(".clip"); if (!card) return;
+  const cid = card.dataset.cid;
+  if (e.target.closest('[data-act="cplay"]')) { bplay(cid); return; }
+  selectClip(cid);
+});
+/* slot clicks: assign (if armed), play, unassign */
+$("#b-slot-list").addEventListener("click", e => {
+  const slot = e.target.closest(".slot"); if (!slot) return;
+  const eid = slot.dataset.eid;
+  if (e.target.closest('[data-act="unassign"]')) { unassign(eid); return; }
+  if (e.target.closest('[data-act="splay"]')) { bplay(ASSIGN[eid]); return; }
+  if (SEL) assign(eid, SEL);
+});
+
+/* drag & drop */
+$("#b-tray").addEventListener("dragstart", e => { const c = e.target.closest(".clip"); if (!c) return; DRAG_CID = c.dataset.cid; c.classList.add("dragging"); });
+$("#b-tray").addEventListener("dragend", e => { const c = e.target.closest(".clip"); if (c) c.classList.remove("dragging"); DRAG_CID = null; });
+$("#b-slot-list").addEventListener("dragover", e => { const s = e.target.closest(".slot"); if (s && DRAG_CID) { e.preventDefault(); s.classList.add("dragover"); } });
+$("#b-slot-list").addEventListener("dragleave", e => { const s = e.target.closest(".slot"); if (s) s.classList.remove("dragover"); });
+$("#b-slot-list").addEventListener("drop", e => { const s = e.target.closest(".slot"); if (s && DRAG_CID) { e.preventDefault(); assign(s.dataset.eid, DRAG_CID); s.classList.remove("dragover"); } });
+
+/* ---- by-order template ---- */
+$("#b-order").addEventListener("click", () => {
+  if (!CLIPS.length) { toast("Сначала загрузите клипы"); return; }
+  const slots = [];
+  for (const cat of Object.keys(CATS)) EVENTS.filter(e => e.category === cat).forEach(e => slots.push(e.id));
+  let i = 0;
+  for (const eid of slots) { if (i >= CLIPS.length) break; ASSIGN[eid] = CLIPS[i].id; i++; }
+  renderTray(); renderSlots(); updateBcov();
+  toast(`Разложено по порядку: ${i} фраз`);
+});
+
+/* ---- builder preview playback ---- */
+let BNOW = null;
+function bplay(cid) {
+  if (!cid) return;
+  if (BNOW === cid && !bpv.paused) { bpv.pause(); return; }
+  BNOW = cid; bpv.src = `/api/clips/audio/${cid}`;
+  bpv.play().catch(() => toast("Не удалось воспроизвести"));
+  setBicons();
+}
+bpv.addEventListener("play", setBicons); bpv.addEventListener("pause", setBicons); bpv.addEventListener("ended", setBicons);
+function setBicons() {
+  $$("#builder .cpp").forEach(b => {
+    const card = b.closest(".clip"), slot = b.closest(".slot");
+    const cid = card ? card.dataset.cid : (slot ? ASSIGN[slot.dataset.eid] : null);
+    const on = cid && cid === BNOW && !bpv.paused;
+    b.innerHTML = `<i class="ti ti-player-${on ? "pause" : "play"}" aria-hidden="true"></i>`;
+  });
+}
+
+/* ---- build & install from the arrangement ---- */
+$("#b-build").addEventListener("click", async () => {
+  const n = Object.keys(ASSIGN).length; if (!n) return;
+  const btn = $("#b-build"), lbl = $("#b-build-lbl"), orig = lbl.textContent;
+  btn.disabled = true; lbl.textContent = "Собираю…";
+  try {
+    await api("/api/clips/build", { method: "POST", body: JSON.stringify({ did: DID, assign: ASSIGN }) });
+    lbl.textContent = "Доставка…";
+    const done = await pollInstall("MY", m => lbl.textContent = m);
+    if (done) {
+      try { await api("/api/activate", { method: "POST", body: JSON.stringify({ did: DID, id: "MY" }) }); } catch (e) {}
+      toast("Ваша озвучка установлена и включена");
+      closeBuilder();
+    } else { toast("Доставка не прошла — попробуйте ещё раз"); }
+  } catch (ex) { toast(ex.message); }
+  finally { btn.disabled = false; lbl.textContent = orig; }
+});

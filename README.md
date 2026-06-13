@@ -35,7 +35,7 @@ Robot vacuums ship with a fixed set of voices, and the popular way to change the
 | 🗂️ **Plain‑language dictionary** | Every event shown by meaning ("Start cleaning", "Low battery") — never raw file numbers. |
 | 🎚️ **Live volume & activate** | Slider writes straight to the robot; switch packs instantly. |
 | 🔁 **Honest install progress** | Real download %‑progress from the robot, auto‑retry on a dropped transfer. |
-| ✍️ **Build your own pack** | Text‑to‑speech, mic recording, or file/video upload → builds + hosts + installs. |
+| ✍️ **Build your own pack** | Upload a tray of clips and **drag them onto event slots** (or tap‑to‑assign / by‑order), plus text‑to‑speech & mic recording → build, host & install. |
 | 🌍 **Multi‑brand / multi‑region** | Trouver, Dreame, Mova × RU / EU / US / SG. |
 
 ---

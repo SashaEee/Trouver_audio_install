@@ -12,6 +12,7 @@ __pycache__/
 # runtime data
 app/data/uploads/
 app/data/build/
+app/data/clips/
 *.log
 
 # os
