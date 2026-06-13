@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roomtone — голос вашего робота</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+</head>
+<body>
+
+<section id="login" class="view">
+  <div class="brandmark">
+    <span class="wave" aria-hidden="true"><i style="height:8px"></i><i style="height:16px"></i><i style="height:22px"></i><i style="height:13px"></i><i style="height:18px"></i></span>
+    <span class="wordmark">Roomtone</span>
+  </div>
+  <p class="tagline">Голос вашего робота — какой захотите.</p>
+  <form class="card" id="login-form" autocomplete="on">
+    <div class="field">
+      <label>Приложение</label>
+      <div class="seg" id="brand">
+        <button type="button" data-v="trouver" class="on">Trouver</button>
+        <button type="button" data-v="dreame">Dreame</button>
+        <button type="button" data-v="mova">Mova</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Регион</label>
+      <div class="seg" id="region">
+        <button type="button" data-v="ru" class="on">RU</button>
+        <button type="button" data-v="eu">EU</button>
+        <button type="button" data-v="us">US</button>
+        <button type="button" data-v="sg">SG</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Эл. почта</label>
+      <input class="input" type="email" id="email" placeholder="you@mail.ru" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Пароль</label>
+      <input class="input" type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn" type="submit" id="login-btn">Войти</button>
+    <div class="err" id="login-err"></div>
+    <div class="note"><i class="ti ti-lock" aria-hidden="true"></i><span>Входим в облако напрямую. Пароль не сохраняется — на сервере живёт только токен сессии.</span></div>
+  </form>
+</section>
+
+<section id="editor" class="view hidden">
+  <div class="topbar">
+    <div class="left">
+      <span class="brandmark" style="margin:0"><span class="wave" aria-hidden="true"><i style="height:6px"></i><i style="height:14px"></i><i style="height:18px"></i><i style="height:10px"></i></span><span class="wordmark" style="font-size:18px">Roomtone</span></span>
+      <span class="dev" id="dev-chip"></span>
+    </div>
+    <div class="left">
+      <span class="vol"><i class="ti ti-volume" aria-hidden="true" style="color:var(--muted)"></i><input type="range" min="0" max="100" step="1" id="vol" style="width:90px"><span class="mono" id="vol-out" style="font-size:12px;color:var(--faint);width:24px"></span></span>
+      <button class="iconbtn" id="logout" aria-label="Выйти"><i class="ti ti-logout" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="section-h">Готовые пакеты</div>
+    <p class="lib-note">Штатные RU/EN включаются мгновенно. В роботе одна «своя» ячейка — установка нового пакета или вашей озвучки заменяет предыдущий.</p>
+    <div class="lib" id="lib"></div>
+
+    <div class="section-h" style="margin-top:26px">Словарь робота</div>
+    <div class="coverage">
+      <div><span class="cov-num" id="cov-num">—</span><span class="cov-sub" id="cov-sub"></span></div>
+      <button class="btn sm" id="build-btn" style="display:none"><i class="ti ti-packages" aria-hidden="true"></i><span id="build-lbl">Собрать и установить</span></button>
+    </div>
+    <div class="bar" id="bar"></div>
+    <div class="filters" id="filters"></div>
+    <div id="list"></div>
+  </div>
+
+  <div class="player" id="player" style="display:none">
+    <button class="pp" id="pp" aria-label="Пауза"><i class="ti ti-player-pause" aria-hidden="true"></i></button>
+    <div class="mid">
+      <div class="pl-top"><span class="pl-ttl" id="pl-ttl">—</span><span class="pl-time mono" id="pl-time">0:00 / 0:00</span></div>
+      <div class="pl-wf" id="pl-wf"></div>
+    </div>
+    <button class="replace" id="pl-replace"><i class="ti ti-microphone" aria-hidden="true"></i>Заменить</button>
+  </div>
+</section>
+
+<div class="sheet-bg" id="sheet-bg"></div>
+<aside class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet-h">
+    <div class="sheet-tt"><div class="sheet-ttl" id="sheet-ttl">—</div><div class="sheet-cur" id="sheet-cur"></div></div>
+    <button class="iconbtn" id="sheet-x" aria-label="Закрыть"><i class="ti ti-x" aria-hidden="true"></i></button>
+  </div>
+
+  <div class="tabs" id="sheet-tabs">
+    <button class="tab on" type="button" data-t="text">Текст&nbsp;→&nbsp;голос</button>
+    <button class="tab" type="button" data-t="rec">Записать</button>
+    <button class="tab" type="button" data-t="file">Файл</button>
+  </div>
+
+  <div class="pane" id="pane-text">
+    <textarea class="ta" id="tts-text" maxlength="180" placeholder="Что робот должен сказать этой фразой…"></textarea>
+    <div class="pane-act"><span class="hint"><i class="ti ti-microphone-2" aria-hidden="true"></i> Голос «Милена» · до 15 сек</span><button class="btn sm" id="tts-go" type="button">Озвучить</button></div>
+  </div>
+
+  <div class="pane hidden" id="pane-rec">
+    <div class="rec-box">
+      <button class="rec-btn" id="rec-btn" type="button" aria-label="Запись"><i class="ti ti-microphone" aria-hidden="true"></i></button>
+      <div class="rec-state" id="rec-state">Нажмите, чтобы записать</div>
+    </div>
+    <div class="pane-act"><span class="hint" id="rec-hint">Можно записать свой голос прямо здесь</span><button class="btn sm" id="rec-use" type="button" disabled>Использовать</button></div>
+  </div>
+
+  <div class="pane hidden" id="pane-file">
+    <button class="drop" id="drop" type="button"><i class="ti ti-upload" aria-hidden="true"></i><b>Выбрать аудио или видео</b><span>MP3, WAV, M4A, MP4 — возьмём первые 15 сек</span></button>
+    <div class="pane-act"><span class="hint" id="file-hint">Из видео вырежем звук автоматически</span><button class="btn sm" id="file-go" type="button" disabled>Загрузить</button></div>
+  </div>
+
+  <div class="sheet-prev" id="sheet-prev" style="display:none">
+    <button class="pp xs" id="prev-pp" type="button" aria-label="Прослушать"><i class="ti ti-player-play" aria-hidden="true"></i></button>
+    <div class="pl-wf" id="prev-wf"></div>
+    <span class="prev-tag" id="prev-tag"></span>
+  </div>
+
+  <div class="sheet-foot">
+    <button class="btn-ghost danger hidden" id="sheet-remove" type="button"><i class="ti ti-arrow-back-up" aria-hidden="true"></i> Вернуть штатную</button>
+    <button class="btn-ghost" id="sheet-done" type="button">Готово</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+<audio id="au" preload="none"></audio>
+<audio id="pv" preload="none"></audio>
+<input type="file" id="file" accept="audio/*,video/*" class="hidden">
+<script src="app.js"></script>
+</body>
+</html>

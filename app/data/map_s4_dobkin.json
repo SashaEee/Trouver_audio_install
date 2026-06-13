@@ -1,0 +1,7 @@
+{
+"003":"start.wav","006":"restart_clean.wav","007":"pause.wav","008":"resume_clean.wav","009":"spot.wav",
+"010":"clean_finish.wav","011":"no_power_charging.wav","012":"home.wav","013":"pause.wav","014":"charging.wav",
+"015":"charging.wav","016":"power_resume_clean.wav","017":"no_power.wav","020":"bin_out.wav","021":"bin_in.wav",
+"045":"findme.wav","047":"timed_clean.wav","065":"room.wav","080":"clean_bin.wav","090":"finish.wav",
+"255":"saving_map.wav","361":"positioning.wav","363":"back_dock_failed.wav"
+}

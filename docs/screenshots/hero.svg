@@ -1,0 +1,154 @@
+<svg viewBox="0 0 1040 600" xmlns="http://www.w3.org/2000/svg" font-family="'Hanken Grotesk',system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+  <defs>
+    <style>
+      .ink{fill:#1B1A17} .muted{fill:#6E6C64} .faint{fill:#9C9A90}
+      .b{font-weight:600} .m{font-weight:500}
+    </style>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="1040" height="600" rx="16" fill="#FBFAF7"/>
+
+  <!-- app card -->
+  <rect x="24" y="24" width="992" height="552" rx="14" fill="#FFFFFF" stroke="rgba(27,26,23,.10)"/>
+
+  <!-- topbar -->
+  <g>
+    <!-- wordmark + wave -->
+    <rect x="48" y="55" width="3" height="8"  rx="1.5" fill="#D85A30"/>
+    <rect x="53" y="49" width="3" height="20" rx="1.5" fill="#D85A30"/>
+    <rect x="58" y="45" width="3" height="28" rx="1.5" fill="#D85A30"/>
+    <rect x="63" y="52" width="3" height="14" rx="1.5" fill="#D85A30"/>
+    <rect x="68" y="48" width="3" height="22" rx="1.5" fill="#D85A30"/>
+    <text x="82" y="65" class="ink b" font-size="19">RoboVoice</text>
+    <circle cx="196" cy="59" r="3.5" fill="#1D9E75"/>
+    <text x="206" y="64" class="muted" font-size="13">E20s Pro Plus · в сети</text>
+    <!-- volume + logout -->
+    <text x="800" y="64" class="faint" font-size="13">Громкость</text>
+    <rect x="868" y="57" width="86" height="4" rx="2" fill="rgba(27,26,23,.16)"/>
+    <rect x="868" y="57" width="60" height="4" rx="2" fill="#D85A30"/>
+    <circle cx="928" cy="59" r="6" fill="#D85A30"/>
+    <circle cx="980" cy="59" r="15" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <path d="M975 59h10M981 55l-4 4 4 4" stroke="#1B1A17" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="24" y1="88" x2="1016" y2="88" stroke="rgba(27,26,23,.10)"/>
+  </g>
+
+  <!-- section: ready packs -->
+  <text x="48" y="124" class="ink b" font-size="16">Готовые пакеты</text>
+
+  <!-- pack card: Кузя (active) -->
+  <g>
+    <rect x="48" y="138" width="296" height="92" rx="13" fill="#FFFFFF" stroke="#D85A30" stroke-width="2"/>
+    <text x="66" y="166" class="ink m" font-size="14">Домовёнок Кузя</text>
+    <rect x="270" y="153" width="58" height="18" rx="6" fill="#FAEBE4"/>
+    <text x="299" y="166" fill="#8E3417" font-size="10" text-anchor="middle">сказка</text>
+    <text x="66" y="186" class="faint" font-size="11" font-family="monospace">57 фраз · активна</text>
+    <rect x="66" y="198" width="118" height="20" rx="6" fill="#E3F3EC"/>
+    <path d="M76 208l4 4 8-8" stroke="#0F6E56" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="94" y="212" fill="#0F6E56" font-size="11">Активна</text>
+    <rect x="190" y="198" width="138" height="20" rx="6" fill="none" stroke="#0F6E56" stroke-opacity=".4"/>
+    <text x="259" y="212" fill="#0F6E56" font-size="11" text-anchor="middle">🎧 Послушать</text>
+  </g>
+
+  <!-- pack card: Star Wars -->
+  <g>
+    <rect x="356" y="138" width="296" height="92" rx="13" fill="#FFFFFF" stroke="rgba(27,26,23,.10)"/>
+    <text x="374" y="166" class="ink m" font-size="14">Звёздные войны — R2‑D2</text>
+    <rect x="586" y="153" width="50" height="18" rx="6" fill="#F6EDD7"/>
+    <text x="611" y="166" fill="#B07A12" font-size="10" text-anchor="middle">дроид</text>
+    <text x="374" y="186" class="faint" font-size="11" font-family="monospace">116 фраз</text>
+    <rect x="374" y="198" width="118" height="20" rx="6" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="433" y="212" class="muted" font-size="11" text-anchor="middle">🎧 Послушать</text>
+    <rect x="498" y="198" width="138" height="20" rx="6" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="567" y="212" class="ink" font-size="11" text-anchor="middle">Установить</text>
+  </g>
+
+  <!-- pack card: GLaDOS -->
+  <g>
+    <rect x="664" y="138" width="304" height="92" rx="13" fill="#FFFFFF" stroke="rgba(27,26,23,.10)"/>
+    <text x="682" y="166" class="ink m" font-size="14">GLaDOS — Portal</text>
+    <rect x="916" y="153" width="34" height="18" rx="6" fill="#E3F3EC"/>
+    <text x="933" y="166" fill="#0F6E56" font-size="10" text-anchor="middle">EN</text>
+    <text x="682" y="186" class="faint" font-size="11" font-family="monospace">79 фраз</text>
+    <rect x="682" y="198" width="122" height="20" rx="6" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="743" y="212" class="muted" font-size="11" text-anchor="middle">🎧 Послушать</text>
+    <rect x="810" y="198" width="140" height="20" rx="6" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="880" y="212" class="ink" font-size="11" text-anchor="middle">Установить</text>
+  </g>
+
+  <!-- coverage -->
+  <text x="48" y="272" class="ink b" font-size="26">57</text>
+  <text x="80" y="272" class="muted" font-size="14">из 116 озвучено</text>
+  <rect x="700" y="256" width="268" height="34" rx="9" fill="#D85A30"/>
+  <text x="834" y="278" fill="#fff" font-size="13" text-anchor="middle" class="m">📦  Собрать и установить · 3</text>
+  <!-- bar -->
+  <rect x="48" y="286" width="920" height="7" rx="3.5" fill="rgba(27,26,23,.16)"/>
+  <rect x="48" y="286" width="452" height="7" rx="3.5" fill="#0F6E56"/>
+  <rect x="500" y="286" width="86" height="7" fill="#D85A30"/>
+
+  <!-- dictionary rows -->
+  <g font-size="13">
+    <!-- header -->
+    <text x="48" y="320" class="faint b" font-size="11" letter-spacing="1">УБОРКА</text>
+
+    <!-- row 1 -->
+    <line x1="48" y1="332" x2="968" y2="332" stroke="rgba(27,26,23,.08)"/>
+    <text x="48" y="354" class="ink m">Начало уборки</text>
+    <text x="48" y="370" class="muted" font-size="11">Начать уборку.</text>
+    <g transform="translate(560,348)">
+      <rect x="0"  y="-6" width="3" height="12" rx="1" fill="#D85A30"/><rect x="6" y="-9" width="3" height="18" rx="1" fill="#D85A30"/>
+      <rect x="12" y="-4" width="3" height="8"  rx="1" fill="#D85A30"/><rect x="18" y="-10" width="3" height="20" rx="1" fill="#C8C6BC"/>
+      <rect x="24" y="-7" width="3" height="14" rx="1" fill="#C8C6BC"/><rect x="30" y="-3" width="3" height="6" rx="1" fill="#C8C6BC"/>
+      <rect x="36" y="-8" width="3" height="16" rx="1" fill="#C8C6BC"/><rect x="42" y="-5" width="3" height="10" rx="1" fill="#C8C6BC"/>
+    </g>
+    <rect x="700" y="343" width="78" height="18" rx="6" fill="#FAEBE4"/>
+    <text x="739" y="356" fill="#8E3417" font-size="11" text-anchor="middle">Твоя</text>
+    <circle cx="900" cy="352" r="14" fill="none" stroke="#D85A30"/>
+    <path d="M896 346v12l10-6z" fill="#8E3417"/>
+    <circle cx="940" cy="352" r="14" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="940" y="357" class="muted" font-size="14" text-anchor="middle">⋯</text>
+
+    <!-- row 2 -->
+    <line x1="48" y1="380" x2="968" y2="380" stroke="rgba(27,26,23,.08)"/>
+    <text x="48" y="402" class="ink m">Уборка завершена</text>
+    <text x="48" y="418" class="muted" font-size="11">Задача уборки выполнена.</text>
+    <g transform="translate(560,396)">
+      <rect x="0"  y="-7" width="3" height="14" rx="1" fill="#C8C6BC"/><rect x="6" y="-4" width="3" height="8" rx="1" fill="#C8C6BC"/>
+      <rect x="12" y="-10" width="3" height="20" rx="1" fill="#C8C6BC"/><rect x="18" y="-6" width="3" height="12" rx="1" fill="#C8C6BC"/>
+      <rect x="24" y="-9" width="3" height="18" rx="1" fill="#C8C6BC"/><rect x="30" y="-3" width="3" height="6" rx="1" fill="#C8C6BC"/>
+      <rect x="36" y="-7" width="3" height="14" rx="1" fill="#C8C6BC"/><rect x="42" y="-5" width="3" height="10" rx="1" fill="#C8C6BC"/>
+    </g>
+    <rect x="700" y="391" width="78" height="18" rx="6" fill="#E3F3EC"/>
+    <text x="739" y="404" fill="#0F6E56" font-size="11" text-anchor="middle">Кузя</text>
+    <circle cx="900" cy="400" r="14" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <path d="M896 394v12l10-6z" fill="#1B1A17"/>
+    <circle cx="940" cy="400" r="14" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="940" y="405" class="muted" font-size="14" text-anchor="middle">⋯</text>
+
+    <!-- row 3 -->
+    <line x1="48" y1="428" x2="968" y2="428" stroke="rgba(27,26,23,.08)"/>
+    <text x="48" y="450" class="ink m">Я здесь</text>
+    <text x="48" y="466" class="muted" font-size="11">Я здесь.</text>
+    <rect x="700" y="439" width="78" height="18" rx="6" fill="rgba(27,26,23,.05)"/>
+    <text x="739" y="452" class="faint" font-size="11" text-anchor="middle">Штатная</text>
+    <circle cx="900" cy="448" r="14" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <path d="M896 442v12l10-6z" fill="#1B1A17"/>
+    <circle cx="940" cy="448" r="14" fill="none" stroke="rgba(27,26,23,.16)"/>
+    <text x="940" y="453" class="muted" font-size="14" text-anchor="middle">＋</text>
+  </g>
+
+  <!-- player -->
+  <line x1="24" y1="496" x2="1016" y2="496" stroke="rgba(27,26,23,.10)"/>
+  <circle cx="64" cy="536" r="20" fill="#FAEBE4" stroke="#D85A30"/>
+  <rect x="58" y="528" width="4" height="16" rx="1.5" fill="#8E3417"/><rect x="66" y="528" width="4" height="16" rx="1.5" fill="#8E3417"/>
+  <text x="100" y="524" class="ink m" font-size="13">Начало уборки · «Начать уборку»</text>
+  <text x="880" y="524" class="faint" font-size="12" font-family="monospace">0:01 / 0:03</text>
+  <g transform="translate(100,540)">
+    <rect x="0" y="-8" width="3" height="16" rx="1" fill="#D85A30"/><rect x="7" y="-11" width="3" height="22" rx="1" fill="#D85A30"/>
+    <rect x="14" y="-5" width="3" height="10" rx="1" fill="#D85A30"/><rect x="21" y="-13" width="3" height="26" rx="1" fill="#D85A30"/>
+    <rect x="28" y="-7" width="3" height="14" rx="1" fill="#C8C6BC"/><rect x="35" y="-10" width="3" height="20" rx="1" fill="#C8C6BC"/>
+    <rect x="42" y="-4" width="3" height="8" rx="1" fill="#C8C6BC"/><rect x="49" y="-12" width="3" height="24" rx="1" fill="#C8C6BC"/>
+    <rect x="56" y="-6" width="3" height="12" rx="1" fill="#C8C6BC"/><rect x="63" y="-9" width="3" height="18" rx="1" fill="#C8C6BC"/>
+    <rect x="70" y="-11" width="3" height="22" rx="1" fill="#C8C6BC"/><rect x="77" y="-5" width="3" height="10" rx="1" fill="#C8C6BC"/>
+  </g>
+</svg>

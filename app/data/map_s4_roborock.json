@@ -1,0 +1,14 @@
+{
+"003":"27sound_power_on.mp3","004":"38sound_connected.mp3","005":"37sound_connecting_network.mp3",
+"006":"8sound_global_clean_start.mp3","007":"66sound_pause_sweep_clean.mp3","008":"63sound_continue_sweep_clean.mp3",
+"009":"9spiral_cleaning_begins.mp3","010":"16sound_sweep_clean_finish_to_charging.mp3","011":"19sound_battery_low_to_charging.mp3",
+"012":"20sound_go_charge.mp3","013":"66sound_pause_sweep_clean.mp3","014":"22sound_charging_start.mp3",
+"015":"22sound_charging_start.mp3","016":"23sound_broken_charging_completed_to_sweep.mp3","017":"43sound_exception_low_power.mp3",
+"018":"60sound_upgrade_begin.mp3","019":"56sound_upgrade_success.mp3","020":"28sound_dust_box_take_out.mp3",
+"021":"30sound_dust_box_installed.mp3","024":"42sound_install_dustbox_or_diad_box.mp3","031":"50sound_exception_bumper.mp3",
+"034":"51sound_exception_trapped.mp3","035":"44sound_exception_robot_tilted.mp3","039":"47sound_exception_waiting_to_charge.mp3",
+"042":"55sound_exception_low_power_off.mp3","045":"39sound_I_am_here.mp3","047":"1sound_appoint_global_clean_start.mp3",
+"060":"35reset_system_successfully.mp3","065":"69sound_appoint_corner_clean_start.mp3","070":"59sound_upgrade_broken_low_power.mp3",
+"107":"8sound_global_clean_start.mp3","117":"49sound_exception_cliff.mp3","125":"49sound_exception_cliff.mp3",
+"144":"41sound_remove_water_box_mop.mp3"
+}

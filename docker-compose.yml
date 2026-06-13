@@ -1,0 +1,12 @@
+services:
+  robovoice:
+    build: .
+    container_name: robovoice
+    ports:
+      - "8765:8765"
+    environment:
+      # set a fixed value to keep login sessions across restarts
+      ROOMTONE_SECRET: ${ROOMTONE_SECRET:-please-change-me}
+      # optional: host your own custom packs (see docs/ADD_YOUR_PACK.md)
+      GH_TOKEN: ${GH_TOKEN:-}
+    restart: unless-stopped

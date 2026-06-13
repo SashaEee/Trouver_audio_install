@@ -1,0 +1,18 @@
+# secrets — NEVER commit
+secret.env
+session.json
+*.token
+
+# python
+venv/
+__pycache__/
+*.pyc
+.Python
+
+# runtime data
+app/data/uploads/
+app/data/build/
+*.log
+
+# os
+.DS_Store
