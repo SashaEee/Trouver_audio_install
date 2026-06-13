@@ -8,7 +8,7 @@ Give your **Trouver / Dreame / Mova** robot the voice of Кузя, R2‑D2, GLaD
 
 **English** · [Русский](README.ru.md)
 
-![hero](docs/screenshots/hero.svg)
+![demo](docs/screenshots/demo.gif)
 
 </div>
 

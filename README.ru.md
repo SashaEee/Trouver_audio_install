@@ -8,7 +8,7 @@
 
 [English](README.md) · **Русский**
 
-![hero](docs/screenshots/hero.svg)
+![demo](docs/screenshots/demo.gif)
 
 </div>
 
